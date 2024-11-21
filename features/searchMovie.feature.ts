@@ -42,7 +42,7 @@ describe('/search', () => {
     });
 
     const response = await request(app.getHttpServer()).get(
-      '/search?query=TheMatrix&page=1',
+      '/movie?query=TheMatrix&page=1',
     );
 
     expect(response.status).toEqual(200);
@@ -95,7 +95,7 @@ describe('/search', () => {
     });
 
     const response = await request(app.getHttpServer()).get(
-      '/search?query=TheMatrix&page=1',
+      '/movie?query=TheMatrix&page=1',
     );
 
     expect(response.status).toEqual(200);

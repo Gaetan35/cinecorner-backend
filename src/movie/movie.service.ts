@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { SearchQueryParams } from './types/searchQueryParams';
+import { MovieSearchQueryParams } from './types/movieSearchQueryParams';
 import { TmdbClient } from '~/tmdb/tmdb.client';
 import { formatTmdbImageUrl } from '~/tmdb/formatTmdbImageUrl';
 
 @Injectable()
-export class SearchService {
+export class MovieService {
   constructor(private readonly tmdbClient: TmdbClient) {}
 
-  async search(params: SearchQueryParams) {
+  async search(params: MovieSearchQueryParams) {
     const { results, page, total_pages, total_results } =
       await this.tmdbClient.searchMovie({
         ...params,

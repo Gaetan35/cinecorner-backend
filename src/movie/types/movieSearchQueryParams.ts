@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsString, Min } from 'class-validator';
 
-export class SearchQueryParams {
+export class MovieSearchQueryParams {
   @IsString()
   query: string;
 
