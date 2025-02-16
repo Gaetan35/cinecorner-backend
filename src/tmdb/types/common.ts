@@ -1,11 +1,4 @@
-export type SearchMovieParams = {
-  query: string;
-  page: number;
-  include_adult?: boolean;
-  language?: string;
-};
-
-type SearchMovieResult = {
+export type TmdbMovie = {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
@@ -23,9 +16,9 @@ type SearchMovieResult = {
   vote_count: number;
 };
 
-export type SearchMovieResponse = {
+export type PaginatedResponse<T> = {
   page: number;
   total_pages: number;
   total_results: number;
-  results: SearchMovieResult[];
+  results: T[];
 };

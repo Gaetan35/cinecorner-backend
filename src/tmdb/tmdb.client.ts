@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { SearchMovieParams, SearchMovieResponse } from './types';
-import { Config } from '~/config';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import qs from 'qs';
+import {
+  GetTrendingMovieRequest,
+  GetTrendingMovieResponse,
+  SearchMovieRequest,
+  SearchMovieResponse,
+} from './types';
+import { Config } from '~config/index';
 
 @Injectable()
 export class TmdbClient {
@@ -15,16 +20,34 @@ export class TmdbClient {
     infer: true,
   });
 
-  private routes = {
-    searchMovie: (queryParams: SearchMovieParams) =>
-      `${this.baseUrl}/search/movie?${qs.stringify(queryParams)}`,
-  };
-
-  async searchMovie(query: SearchMovieParams): Promise<SearchMovieResponse> {
-    const response = await fetch(this.routes.searchMovie(query), {
+  private async sendRequest<T>(url: string): Promise<T> {
+    const response = await fetch(url, {
       headers: { Authorization: `Bearer ${this.apiKey}` },
     });
 
-    return response.json();
+    if (!response.ok) {
+      throw new HttpException(
+        `TMDB API error: ${response.statusText}`,
+        response.status,
+      );
+    }
+
+    return await response.json();
+  }
+
+  searchMovie(params: SearchMovieRequest) {
+    return this.sendRequest<SearchMovieResponse>(
+      `${this.baseUrl}/search/movie?${qs.stringify(params)}`,
+    );
+  }
+
+  getTrendingMovies({
+    timeWindow,
+    language = 'en-US',
+    page = 1,
+  }: GetTrendingMovieRequest) {
+    return this.sendRequest<GetTrendingMovieResponse>(
+      `${this.baseUrl}/trending/movie/${timeWindow}?${qs.stringify({ language, page })}`,
+    );
   }
 }
