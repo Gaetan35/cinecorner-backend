@@ -1,3 +1,6 @@
+import { config } from './defaultConfig';
+import { testConfig } from './testConfig';
+
 export type Config = {
   port: number;
   tmdb: {
@@ -6,23 +9,5 @@ export type Config = {
   };
 };
 
-const config = (): Config => ({
-  port: Number(process.env.PORT ?? 8080),
-  tmdb: {
-    baseUrl: process.env.TMDB_URL!,
-    apiKey: process.env.TMDB_API_KEY!,
-  },
-});
-
-const testConfig = (): Config => ({
-  port: 8080,
-  tmdb: {
-    baseUrl: 'https://tmdb.api.com',
-    apiKey: 'apiKey',
-  },
-});
-
-export const loadConfig = () => {
-  const env = process.env.NODE_ENV;
-  return env === 'test' ? testConfig() : config();
-};
+export const loadConfig = (env = process.env.NODE_ENV) =>
+  env === 'test' ? testConfig() : config();
