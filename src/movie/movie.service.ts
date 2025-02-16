@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { MovieSearchQueryParams } from './types/movieSearchQueryParams';
-import { TmdbClient } from '~/tmdb/tmdb.client';
-import { formatTmdbImageUrl } from '~/tmdb/formatTmdbImageUrl';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { TmdbClient } from '~tmdb/tmdb.client';
+import {
+  GetTrendingMoviesParams,
+  GetTrendingMoviesQueryParams,
+  MovieSearchQueryParams,
+} from './validation';
+import { getRandomNumberInRange } from '~shared/getRandomNumberInRange';
+import { tmdbMovieMapper } from './mappers/tmdbMovieMapper';
 
 @Injectable()
 export class MovieService {
@@ -16,19 +22,35 @@ export class MovieService {
       });
 
     return {
-      movies: results.map((movie) => ({
-        id: movie.id,
-        title: movie.title,
-        overview: movie.overview,
-        posterPath: movie.poster_path
-          ? formatTmdbImageUrl<'poster'>('original', movie.poster_path)
-          : null,
-        backdropPath: movie.backdrop_path
-          ? formatTmdbImageUrl<'backdrop'>('original', movie.backdrop_path)
-          : null,
-        releaseDate: movie.release_date || null,
-        genreIds: movie.genre_ids,
-      })),
+      results: results.map(tmdbMovieMapper),
+      page,
+      totalPages: total_pages,
+      totalResults: total_results,
+    };
+  }
+
+  async getMovieHighlight() {
+    const { results } = await this.tmdbClient.getTrendingMovies({
+      timeWindow: 'day',
+    });
+
+    if (!results.length) {
+      throw new NotFoundException('No trending movies found for today');
+    }
+
+    const highlightIndex = getRandomNumberInRange({ max: results.length - 1 });
+
+    return tmdbMovieMapper(results[highlightIndex]);
+  }
+
+  async getTrendingMovies(
+    params: GetTrendingMoviesQueryParams & GetTrendingMoviesParams,
+  ) {
+    const { results, page, total_pages, total_results } =
+      await this.tmdbClient.getTrendingMovies(params);
+
+    return {
+      results: results.map(tmdbMovieMapper),
       page,
       totalPages: total_pages,
       totalResults: total_results,
