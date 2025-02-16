@@ -1,35 +1,35 @@
+import { app } from 'features/setup';
 import fetchMock from 'fetch-mock';
 import request from 'supertest';
-import { app } from './setup';
+
+const mockedTmdbResponse = {
+  page: 1,
+  total_pages: 1,
+  total_results: 2,
+  results: [
+    {
+      id: 492606,
+      title: 'Title',
+      overview: 'Movie overview',
+      poster_path: '/poster.jpg',
+      backdrop_path: '/backdrop.jpg',
+      release_date: '2019-05-26',
+      genre_ids: [16, 14, 10752, 10770],
+    },
+    {
+      id: 591278,
+      title: 'Title2',
+      overview: 'Movie overview2',
+      poster_path: '/poster2.jpg',
+      backdrop_path: null,
+      release_date: '',
+      genre_ids: [99],
+    },
+  ],
+};
 
 describe('/search', () => {
   it('should return mapped response from TMDB', async () => {
-    const mockedTmdbResponse = {
-      page: 1,
-      total_pages: 1,
-      total_results: 1,
-      results: [
-        {
-          id: 492606,
-          title: 'Title',
-          overview: 'Movie overview',
-          poster_path: '/poster.jpg',
-          backdrop_path: '/backdrop.jpg',
-          release_date: '2019-05-26',
-          genre_ids: [16, 14, 10752, 10770],
-        },
-        {
-          id: 591278,
-          title: 'Title2',
-          overview: 'Movie overview2',
-          poster_path: '/poster2.jpg',
-          backdrop_path: null,
-          release_date: '',
-          genre_ids: [99],
-        },
-      ],
-    };
-
     fetchMock.get('https://tmdb.api.com/search/movie', mockedTmdbResponse, {
       name: 'movieSearch',
       query: {
@@ -49,8 +49,8 @@ describe('/search', () => {
     expect(response.body).toEqual({
       page: 1,
       totalPages: 1,
-      totalResults: 1,
-      movies: [
+      totalResults: 2,
+      results: [
         {
           id: 492606,
           title: 'Title',
@@ -103,7 +103,7 @@ describe('/search', () => {
       page: 1,
       totalPages: 1,
       totalResults: 0,
-      movies: [],
+      results: [],
     });
 
     expect(fetchMock.callHistory.called('movieSearch')).toBe(true);
