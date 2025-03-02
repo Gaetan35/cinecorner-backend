@@ -1,4 +1,4 @@
-export type MovieEntity = {
+export class Movie {
   id: number;
   title: string;
   overview: string;
@@ -6,4 +6,11 @@ export type MovieEntity = {
   backdropPath: string | null;
   releaseDate: string | null;
   genreIds: number[];
-};
+}
+
+export class PaginatedMovieList {
+  page: number;
+  totalPages: number;
+  totalResults: number;
+  results: Movie[];
+}

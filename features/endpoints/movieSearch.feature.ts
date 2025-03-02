@@ -28,7 +28,7 @@ const mockedTmdbResponse = {
   ],
 };
 
-describe('/search', () => {
+describe('/movie/search', () => {
   it('should return mapped response from TMDB', async () => {
     fetchMock.get('https://tmdb.api.com/search/movie', mockedTmdbResponse, {
       name: 'movieSearch',
@@ -42,7 +42,7 @@ describe('/search', () => {
     });
 
     const response = await request(app.getHttpServer()).get(
-      '/movie?query=TheMatrix&page=1',
+      '/movie/search?query=TheMatrix&page=1',
     );
 
     expect(response.status).toEqual(200);
@@ -95,7 +95,7 @@ describe('/search', () => {
     });
 
     const response = await request(app.getHttpServer()).get(
-      '/movie?query=TheMatrix&page=1',
+      '/movie/search?query=TheMatrix&page=1',
     );
 
     expect(response.status).toEqual(200);

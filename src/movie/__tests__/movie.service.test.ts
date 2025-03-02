@@ -48,7 +48,10 @@ describe('MovieService', () => {
         total_results: 2,
         results: [],
       });
-      const result = await service.search({ query: 'Interstellar', page: 1 });
+      const result = await service.movieSearch({
+        query: 'Interstellar',
+        page: 1,
+      });
 
       expect(mockTmdbClient.searchMovie).toHaveBeenCalledWith({
         query: 'Interstellar',
@@ -70,7 +73,7 @@ describe('MovieService', () => {
       );
 
       await expect(
-        service.search({ query: 'Interstellar', page: 1 }),
+        service.movieSearch({ query: 'Interstellar', page: 1 }),
       ).rejects.toThrow(new Error('searchMovie error'));
     });
   });

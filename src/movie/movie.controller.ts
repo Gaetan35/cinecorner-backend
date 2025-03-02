@@ -1,25 +1,27 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { MovieService } from './movie.service';
-import { Movie, PaginatedList } from './types';
 import {
+  GetMovieHighlightResponse,
   GetTrendingMoviesParams,
   GetTrendingMoviesQueryParams,
+  GetTrendingMoviesResponse,
   MovieSearchQueryParams,
-} from './validation';
+  MovieSearchResponse,
+} from './schemas';
 
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @Get()
-  search(
+  @Get('/search')
+  movieSearch(
     @Query() query: MovieSearchQueryParams,
-  ): Promise<PaginatedList<Movie>> {
-    return this.movieService.search(query);
+  ): Promise<MovieSearchResponse> {
+    return this.movieService.movieSearch(query);
   }
 
   @Get('/highlight')
-  getMovieHighlight(): Promise<Movie> {
+  getMovieHighlight(): Promise<GetMovieHighlightResponse> {
     return this.movieService.getMovieHighlight();
   }
 
@@ -27,7 +29,7 @@ export class MovieController {
   getTrendingMovies(
     @Query() { page, language }: GetTrendingMoviesQueryParams,
     @Param() { timeWindow }: GetTrendingMoviesParams,
-  ): Promise<PaginatedList<Movie>> {
+  ): Promise<GetTrendingMoviesResponse> {
     return this.movieService.getTrendingMovies({ page, language, timeWindow });
   }
 }

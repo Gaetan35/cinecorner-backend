@@ -2,10 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { TmdbClient } from '~tmdb/tmdb.client';
 import {
+  GetMovieHighlightResponse,
   GetTrendingMoviesParams,
   GetTrendingMoviesQueryParams,
+  GetTrendingMoviesResponse,
   MovieSearchQueryParams,
-} from './validation';
+  MovieSearchResponse,
+} from './schemas';
 import { getRandomNumberInRange } from '~shared/getRandomNumberInRange';
 import { tmdbMovieMapper } from './mappers/tmdbMovieMapper';
 
@@ -13,7 +16,9 @@ import { tmdbMovieMapper } from './mappers/tmdbMovieMapper';
 export class MovieService {
   constructor(private readonly tmdbClient: TmdbClient) {}
 
-  async search(params: MovieSearchQueryParams) {
+  async movieSearch(
+    params: MovieSearchQueryParams,
+  ): Promise<MovieSearchResponse> {
     const { results, page, total_pages, total_results } =
       await this.tmdbClient.searchMovie({
         ...params,
@@ -29,7 +34,7 @@ export class MovieService {
     };
   }
 
-  async getMovieHighlight() {
+  async getMovieHighlight(): Promise<GetMovieHighlightResponse> {
     const { results } = await this.tmdbClient.getTrendingMovies({
       timeWindow: 'day',
     });
@@ -45,7 +50,7 @@ export class MovieService {
 
   async getTrendingMovies(
     params: GetTrendingMoviesQueryParams & GetTrendingMoviesParams,
-  ) {
+  ): Promise<GetTrendingMoviesResponse> {
     const { results, page, total_pages, total_results } =
       await this.tmdbClient.getTrendingMovies(params);
 

@@ -1,8 +1,8 @@
-import { Movie } from '~movie/types';
+import { MovieEntity } from '~movie/types';
 import { formatTmdbImageUrl } from '~tmdb/helpers';
 import { TmdbMovie } from '~tmdb/types/common';
 
-export const tmdbMovieMapper = (movie: TmdbMovie): Movie => ({
+export const tmdbMovieMapper = (movie: TmdbMovie): MovieEntity => ({
   id: movie.id,
   title: movie.title,
   overview: movie.overview,

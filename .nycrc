@@ -9,5 +9,5 @@
   "functions": 90,
   "lines": 90,
   "include": ["src/**"],
-  "exclude": ["src/**/*.test.ts", "src/main.ts"]
+  "exclude": ["src/**/*.test.ts", "src/main.ts", "src/**/schemas/index.ts"]
 }
