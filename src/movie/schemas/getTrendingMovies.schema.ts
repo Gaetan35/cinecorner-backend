@@ -10,7 +10,7 @@ export class GetTrendingMoviesQueryParams {
 
   @IsString()
   @IsOptional()
-  language: string;
+  language?: string;
 }
 
 export class GetTrendingMoviesParams {

@@ -8,6 +8,8 @@ import {
   MovieSearchQueryParams,
   MovieSearchResponse,
 } from './schemas';
+import { ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiError } from '~shared/errors.schema';
 
 @Controller('movie')
 export class MovieController {
@@ -21,6 +23,10 @@ export class MovieController {
   }
 
   @Get('/highlight')
+  @ApiNotFoundResponse({
+    description: 'No trending movies found for today',
+    type: ApiError,
+  })
   getMovieHighlight(): Promise<GetMovieHighlightResponse> {
     return this.movieService.getMovieHighlight();
   }
